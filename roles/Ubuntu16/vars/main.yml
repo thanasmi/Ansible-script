@@ -1,6 +1,0 @@
----
-# vars file for .
-
-host_count: "{{ groups['Ubuntu16'] | length }}"
-src_img: img_source
-dest_http: /var/www/html
