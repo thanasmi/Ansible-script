@@ -1,0 +1,38 @@
+{% set all_hosts = groups['Ubuntu16'] | length %}
+{% for i in play_hosts | sort %}
+{% set alive = ( alive | default(0) ) %}
+  {% if hostvars[i]['connection_check']['ping'] == "pong" %}
+      {% set alive = ( alive | default(0) ) + 1 %}
+  {% endif %}
+
+
+{% if loop.last %}
+  {% set dead = all_hosts - alive %}
+<!-- Put bar chart inside this condition -->
+
+  <div id="piechart_ubuntu" style="width: 900px; height: 500px;"></div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data_ubuntu = google.visualization.arrayToDataTable([
+          ['Task', 'Hosts'],
+          ['Alive',     {{ alive }}],
+          ['Dead',    {{ dead }}]
+        ]);
+
+        var options = {
+          title: 'Connection Check Result'
+        };
+
+        var chart_ubuntu = new google.visualization.PieChart(document.getElementById('piechart_ubuntu'));
+
+        chart_ubuntu.draw(data_ubuntu, options);
+      }
+    </script>  
+<!-- End Comment -->
+{% endif %}
+{% endfor %} 
