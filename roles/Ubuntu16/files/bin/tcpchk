@@ -1,0 +1,43 @@
+#!/bin/bash
+
+showhelpFunc() {
+        echo "TCP Check, version 0.2.1"
+        echo "Usage:    tcpcheck [Option]"
+        echo "  tcpcheck [Host]"
+        echo "  tcpcheck [Host] [Port]"
+        echo "  tcpcheck [Host] [Port] [Timeout]"
+        echo "TCP Check option:"
+        echo "  -h --help       Help"
+        echo "  [Host]          IP or Domain"
+        echo "  [Port]          TCP Port for check (default is 22)"
+        echo "  [Timeout]       Set timeout in second (defualt is 3)"
+}
+
+validateFunc() {
+        checkHelpFunc $@
+        if ! [[ $# -ge 1 ]]; then
+                showhelpFunc $@
+                exit 1;
+        fi
+}
+tcpcheckFunc() {
+        HOST=$1
+        PORT=22
+        TIMEOUT=3
+        if [[ $# -eq 3 ]]; then
+                PORT=$2
+                TIMEOUT=$3
+        elif [[ $# -eq 2 ]]; then
+                PORT=$2
+        fi
+        timeout $TIMEOUT bash -c "echo >/dev/tcp/$HOST/$PORT" && echo "$HOST port $PORT is open" || echo "$HOST port $PORT is closed"
+
+}
+checkHelpFunc() {
+        if [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
+                showhelpFunc $@
+                exit 0;
+        fi
+}
+validateFunc $@
+tcpcheckFunc $@

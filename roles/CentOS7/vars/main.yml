@@ -1,0 +1,6 @@
+---
+# vars file for .
+
+host_count: "{{ groups['CentOS7'] | length }}"
+src_img: img_source
+dest_http: /var/www/html
