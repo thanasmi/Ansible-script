@@ -195,4 +195,6 @@
     subject='System disk space report on {{ item }}'
     subtype="html"
     body='<h2>{{ item }} is running </h2><br><h4>Filesystem Size Used Avail Use% Mounted on<h4><br>{{ disk_space.stdout }}'
+  retries: 3
+  ignore_errors: True
 
