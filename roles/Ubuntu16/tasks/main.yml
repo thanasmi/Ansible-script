@@ -161,7 +161,7 @@
   ignore_errors: True
 
 - name: Clear path
-  shell: "rm {{ dest_http }}/auditplay/resources/views/report/centos7/*"
+  shell: "rm {{ dest_http }}/auditplay/resources/views/report/ubuntu16/*"
   delegate_to: "192.168.106.10"
   ignore_errors: True
 
