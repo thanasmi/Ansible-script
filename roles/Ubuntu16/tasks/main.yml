@@ -157,7 +157,7 @@
   template: 
     src: ../templates/check_connection.j2
     dest: "{{ dest_http }}/auditplay/resources/views/sub_dashboard/ubuntu16_connection.blade.php"
-  delegate_to: localhost
+  delegate_to: "192.168.106.10"
   ignore_errors: True
 
 - name: Generate Report
@@ -165,7 +165,7 @@
   template: 
     src: ../templates/ReportGenerator_Ubuntu.j2
     dest: "{{ dest_http }}/auditplay/resources/views/report/ubuntu16/result_{{ item | regex_replace('.com') }}.blade.php"
-  delegate_to: localhost
+  delegate_to: "192.168.106.10"
   ignore_errors: True
     # - name: copy files
     #   copy:
