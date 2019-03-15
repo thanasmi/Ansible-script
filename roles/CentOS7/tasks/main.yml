@@ -161,6 +161,11 @@
   delegate_to: "192.168.106.10"
   ignore_errors: True
 
+- name: Clear path
+  shell: "rm {{ dest_http }}/auditplay/resources/views/report/centos7/*"
+  delegate_to: "192.168.106.10"
+  ignore_errors: True
+
 - name: Generate Report
   with_items: "{{ groups['CentOS7'] }}"
   template: 
@@ -168,15 +173,28 @@
     dest: "{{ dest_http }}/auditplay/resources/views/report/centos7/result_{{ item | regex_replace('.com') }}.blade.php"
   delegate_to: "192.168.106.10"
   ignore_errors: True
-    # - name: copy files
-    #   copy:
-    #     src: "{{ src_img }}"
-    #     dest: "{{ dest_http }}"
-    #     owner: apache
-    #     group: apache
-    #     mode: 0644
-    #     force: no
-    #   delegate_to: localhost
 
-#    - set_fact: current_host="{% for i in {{ item }} %} {{ i }} {% endfor %}"
+
+
+# ---------------------------------------
+# Extras Script
+# ---------------------------------------
+
+- name: Check disk space
+  shell: "df -h /dev/mapper/centos-root | awk NR==2"
+  register: disk_space
+  ignore_errors: True
+
+- name: Notifying the IT admin about the disk usage
+  with_items: "{{ groups['CentOS7'] }}"
+  mail:
+    host="smtp.mailgun.org"
+    port="25"
+    username="thanasmi.mailgun.org@sandbox8921d843fb254ae1918a27fe4b69156b.mailgun.org"
+    password="SuperSecretP@ssw0rd"
+    from="Ansible@AuditPlay.com"
+    to="thanasmi@gmail.com"
+    subject='System disk space report on {{ item }}'
+    subtype="html"
+    body='<h2>{{ item }} is running </h2><br><h4>Filesystem Size Used Avail Use% Mounted on<h4><br>{{ disk_space.stdout }}'
 
