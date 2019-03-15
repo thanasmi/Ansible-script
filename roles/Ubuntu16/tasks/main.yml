@@ -160,6 +160,11 @@
   delegate_to: "192.168.106.10"
   ignore_errors: True
 
+- name: Clear path
+  shell: "rm {{ dest_http }}/auditplay/resources/views/report/centos7/*"
+  delegate_to: "192.168.106.10"
+  ignore_errors: True
+
 - name: Generate Report
   with_items: "{{ groups['Ubuntu16'] }}"
   template: 
@@ -167,15 +172,3 @@
     dest: "{{ dest_http }}/auditplay/resources/views/report/ubuntu16/result_{{ item | regex_replace('.com') }}.blade.php"
   delegate_to: "192.168.106.10"
   ignore_errors: True
-    # - name: copy files
-    #   copy:
-    #     src: "{{ src_img }}"
-    #     dest: "{{ dest_http }}"
-    #     owner: apache
-    #     group: apache
-    #     mode: 0644
-    #     force: no
-    #   delegate_to: localhost
-
-#    - set_fact: current_host="{% for i in {{ item }} %} {{ i }} {% endfor %}"
-
